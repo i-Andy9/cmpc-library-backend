@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { BookModule } from './book/book.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
+
+import { BookModule } from './book/book.module';
 import { Book } from './book/entities/book.entity';
 import { CommonModule } from './common/common.module';
+import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,7 +24,7 @@ import { CommonModule } from './common/common.module';
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
-        models: [Book],
+        models: [Book, User],
         autoLoadModels: true,
         synchronize: true,
         logging: true,
@@ -28,6 +32,8 @@ import { CommonModule } from './common/common.module';
     }),
     BookModule,
     CommonModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
