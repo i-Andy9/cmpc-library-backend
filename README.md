@@ -1,98 +1,156 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# CMPC-libros
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Aplicación web para la gestión digital del inventario de la tienda **CMPC-libros**, permitiendo administración avanzada de libros, autenticación, análisis y exportación de datos.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Tabla de Contenidos
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [Características](#características)
+- [Arquitectura](#arquitectura)
+- [Instalación y configuración](#instalación-y-configuración)
+- [Despliegue con Docker](#despliegue-con-docker)
+- [Uso](#uso)
+- [API y Documentación](#api-y-documentación)
+- [Modelo de Base de Datos](#modelo-de-base-de-datos)
+- [Decisiones de diseño](#decisiones-de-diseño)
+- [Testing](#testing)
+- [Contribuciones](#contribuciones)
+- [Licencia](#licencia)
 
-## Project setup
+---
 
-```bash
-$ yarn install
+## Características
+
+- **Autenticación JWT** para usuarios.
+- **CRUD completo** de libros.
+- **Filtrado avanzado** por género, editorial, autor y disponibilidad.
+- **Ordenamiento y paginación** de resultados.
+- **Búsqueda en tiempo real**.
+- **Carga de imágenes** para libros.
+- **Exportación a CSV**.
+- **Soft delete** (eliminación lógica).
+- **Logging** de operaciones.
+- **Validación y manejo de errores** robusto.
+- **Documentación Swagger/OpenAPI**.
+- **Cobertura de tests ≥ 80%**.
+
+---
+
+## Arquitectura
+
+- **Frontend:** React + TypeScript (no incluido en este repo)
+- **Backend:** NestJS + TypeScript
+- **Base de datos:** PostgreSQL (gestionada con Sequelize ORM)
+- **Contenedores:** Docker y docker-compose
+
+![Diagrama de arquitectura](./docs/arquitectura.png) <!-- Reemplaza con tu imagen real -->
+
+---
+
+## Instalación y configuración
+
+### Requisitos
+
+- Node.js >= 18
+- Docker y docker-compose
+- PostgreSQL (si no usas Docker)
+
+### Variables de entorno
+
+Crea un archivo `.env` en la raíz con:
+
+```
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=cmpc_libros
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+JWT_SECRET=tu_clave_secreta
 ```
 
-## Compile and run the project
+### Instalación
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+git clone https://github.com/tuusuario/cmpc-libros.git
+cd cmpc-libros
+npm install
 ```
 
-## Run tests
+---
+
+## Despliegue con Docker
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+docker-compose up --build
 ```
 
-## Deployment
+Esto levantará la base de datos y el backend de NestJS.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Uso
+
+- Accede a la API en [http://localhost:3000](http://localhost:3000)
+- Documentación Swagger en [http://localhost:3000/api](http://localhost:3000/api)
+- Usa herramientas como Postman para probar los endpoints.
+
+---
+
+## API y Documentación
+
+La documentación interactiva está disponible en `/api` gracias a Swagger.
+
+### Endpoints principales
+
+- `POST /auth/login` — Login de usuario
+- `GET /book` — Listado de libros (con filtros, paginación, ordenamiento)
+- `POST /book` — Crear libro
+- `GET /book/:id` — Obtener libro por ID
+- `PATCH /book/:id` — Editar libro
+- `DELETE /book/:id` — Eliminar libro (soft delete)
+- `GET /book/export/csv` — Exportar libros a CSV
+
+---
+
+## Modelo de Base de Datos
+
+- **Book:** id (UUID), title, author, publisher, price, available, genre, imageUrl, deletedAt
+- **User:** id, username, password, roles, etc.
+- **Logs:** id, action, userId, timestamp
+
+![Modelo relacional](./docs/modelo-db.png) <!-- Reemplaza con tu imagen real -->
+
+---
+
+## Decisiones de diseño
+
+- **NestJS** por su arquitectura modular y soporte para buenas prácticas (SOLID).
+- **Sequelize** para ORM y soporte de soft delete.
+- **DTOs y validaciones** para seguridad y robustez.
+- **Interceptors y pipes** para transformación y validación de datos.
+- **Docker** para facilitar el despliegue local y en producción.
+
+---
+
+## Testing
+
+- Tests unitarios para servicios y controladores con Jest.
+- Cobertura mínima del 80%.
+- Ejecuta los tests con:
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+npm run test
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## Contribuciones
 
-Check out a few resources that may come in handy when working with NestJS:
+¡Bienvenidas! Abre un issue o pull request.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## Licencia
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+MIT
