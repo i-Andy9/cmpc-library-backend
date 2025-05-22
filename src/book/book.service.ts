@@ -62,6 +62,7 @@ export class BookService {
       return this.toBookResponse(book);
     } catch (error) {
       this.logger.error('Error fetching book:', error.message);
+      if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to fetch book');
     }
   }
@@ -79,6 +80,7 @@ export class BookService {
       return this.toBookResponse(book);
     } catch (error) {
       this.logger.error('Error updating book:', error.message);
+      if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to update book');
     }
   }

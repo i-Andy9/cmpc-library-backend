@@ -7,13 +7,12 @@ Aplicación web para la gestión digital del inventario de la tienda **CMPC-libr
 ## Tabla de Contenidos
 
 - [Características](#características)
-- [Arquitectura](#arquitectura)
+- [Arquitectura y Decisiones de Diseño](#arquitectura-y-decisiones-de-diseño)
 - [Instalación y configuración](#instalación-y-configuración)
 - [Despliegue con Docker](#despliegue-con-docker)
 - [Uso](#uso)
 - [API y Documentación](#api-y-documentación)
 - [Modelo de Base de Datos](#modelo-de-base-de-datos)
-- [Decisiones de diseño](#decisiones-de-diseño)
 - [Testing](#testing)
 - [Contribuciones](#contribuciones)
 - [Licencia](#licencia)
@@ -37,14 +36,27 @@ Aplicación web para la gestión digital del inventario de la tienda **CMPC-libr
 
 ---
 
-## Arquitectura
+## Arquitectura y Decisiones de Diseño
 
-- **Frontend:** React + TypeScript (no incluido en este repo)
-- **Backend:** NestJS + TypeScript
-- **Base de datos:** PostgreSQL (gestionada con Sequelize ORM)
-- **Contenedores:** Docker y docker-compose
+### Arquitectura General
 
-![Diagrama de arquitectura](./docs/arquitectura.png) <!-- Reemplaza con tu imagen real -->
+- **Backend:** NestJS + TypeScript, arquitectura modular, controladores y servicios separados, DTOs para validación y tipado fuerte.
+- **Base de datos:** PostgreSQL gestionada con Sequelize ORM, uso de modelos y migraciones, soporte para soft delete.
+- **Frontend:** React + TypeScript (no incluido en este repo), pensado para consumir la API RESTful.
+- **Contenedores:** Docker y docker-compose para facilitar el despliegue y la portabilidad.
+
+### Decisiones de Diseño
+
+- **NestJS**: Elegido por su estructura modular, soporte para buenas prácticas (SOLID), inyección de dependencias y ecosistema robusto.
+- **Sequelize**: ORM que permite modelar entidades, relaciones y soft delete de manera sencilla y compatible con PostgreSQL.
+- **DTOs y validaciones**: Uso de DTOs y class-validator para garantizar la integridad y seguridad de los datos recibidos en la API.
+- **Autenticación JWT**: Seguridad basada en tokens, con roles y guards para proteger rutas sensibles.
+- **Interceptors y pipes**: Para logging, transformación y validación de datos de entrada y salida.
+- **Swagger/OpenAPI**: Documentación interactiva y autogenerada para facilitar el consumo y testing de la API.
+- **Testing**: Cobertura de tests unitarios y de integración con Jest, siguiendo TDD en los servicios principales.
+- **Docker**: Facilita el despliegue local y en producción, asegurando consistencia entre entornos.
+- **Soft delete**: Permite mantener historial y evitar pérdidas accidentales de datos.
+- **Exportación a CSV**: Para análisis y respaldo de datos desde la API.
 
 ---
 
@@ -93,6 +105,7 @@ Esto levantará la base de datos y el backend de NestJS.
 
 - Accede a la API en [http://localhost:3000](http://localhost:3000)
 - Documentación Swagger en [http://localhost:3000/api](http://localhost:3000/api)
+- Swagger de los endpoints [http://localhost:3000/api/docs](http://localhost:3000/api/docs)
 - Usa herramientas como Postman para probar los endpoints.
 
 ---
@@ -120,16 +133,6 @@ La documentación interactiva está disponible en `/api` gracias a Swagger.
 - **Logs:** id, action, userId, timestamp
 
 ![Modelo relacional](./docs/modelo-db.png) <!-- Reemplaza con tu imagen real -->
-
----
-
-## Decisiones de diseño
-
-- **NestJS** por su arquitectura modular y soporte para buenas prácticas (SOLID).
-- **Sequelize** para ORM y soporte de soft delete.
-- **DTOs y validaciones** para seguridad y robustez.
-- **Interceptors y pipes** para transformación y validación de datos.
-- **Docker** para facilitar el despliegue local y en producción.
 
 ---
 

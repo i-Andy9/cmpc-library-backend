@@ -8,11 +8,16 @@ import { User } from './entities/user.entity';
 describe('UserService', () => {
   let service: UserService;
   let userModel: any;
-  let jwtService: any;
 
   beforeEach(async () => {
-    userModel = { findOne: jest.fn(), create: jest.fn(), findAll: jest.fn() };
-    jwtService = { sign: jest.fn() };
+    userModel = {
+      findOne: jest.fn(),
+      create: jest.fn(),
+      findAll: jest.fn(),
+      findByPk: jest.fn(),
+      update: jest.fn(),
+    };
+    const jwtService = { signAsync: jest.fn().mockResolvedValue('token') };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
@@ -50,42 +55,71 @@ describe('UserService', () => {
     expect(result[0].username).toBe('test');
   });
 
-  it('should find one user', async () => {
+  it('should return a user on findOne', async () => {
     userModel.findOne.mockResolvedValue({
       dataValues: { id: '1', username: 'test', password: 'hashed' },
     });
-    const result = await service.findOne(1);
-    expect(result.username).toBe('test');
+    const result = await service.findOne('1');
+    expect(result).toEqual({
+      id: '1',
+      username: 'test',
+      email: undefined,
+      role: undefined,
+      createdAt: undefined,
+    });
   });
 
-  it('should throw if user not found in findOne', async () => {
+  it('should throw NotFoundException if user not found on findOne', async () => {
     userModel.findOne.mockResolvedValue(null);
-    await expect(service.findOne(1)).rejects.toThrow();
+    await expect(service.findOne('1')).rejects.toThrow();
   });
 
   it('should update a user', async () => {
-    userModel.findByPk = jest
-      .fn()
-      .mockResolvedValue({ username: 'test', update: jest.fn() });
+    userModel.findByPk.mockResolvedValue({
+      update: jest.fn().mockResolvedValue(true),
+      save: jest.fn().mockResolvedValue(true),
+      username: 'test',
+      dataValues: {
+        id: '1',
+        username: 'test',
+        email: undefined,
+        role: undefined,
+        createdAt: undefined,
+      },
+    });
     userModel.update = jest.fn().mockResolvedValue([1]);
-    const result = await service.update('1', { username: 'new' });
-    expect(result).toBeDefined();
+    const result = await service.update('1', { username: 'test' });
+    expect(result).toEqual({
+      id: '1',
+      username: 'test',
+      email: undefined,
+      role: undefined,
+      createdAt: undefined,
+    });
   });
 
   it('should remove a user', async () => {
-    userModel.findByPk = jest.fn().mockResolvedValue({ destroy: jest.fn() });
-    const result = await service.remove(1);
-    expect(result.message).toContain('deleted');
+    userModel.findByPk.mockResolvedValue({
+      destroy: jest.fn().mockResolvedValue(true),
+      username: 'test',
+    });
+    const result = await service.remove('1');
+    expect(result).toEqual({ message: 'User 1 deleted (soft delete)' });
   });
 
   it('should login a user', async () => {
     userModel.findOne.mockResolvedValue({
-      dataValues: { id: '1', username: 'test', password: 'hashed' },
-      password: 'hashed',
       username: 'test',
+      password: 'hashed',
       id: '1',
+      dataValues: {
+        id: '1',
+        username: 'test',
+        email: undefined,
+        role: undefined,
+        createdAt: undefined,
+      },
     });
-    jwtService.sign.mockReturnValue('token');
     service.hashPassword = jest.fn().mockResolvedValue('hashed');
     const bcrypt = require('bcryptjs');
     jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
@@ -93,7 +127,17 @@ describe('UserService', () => {
       username: 'test',
       password: '123456',
     });
-    expect(result.access_token).toBe('token');
+    expect(result).toEqual({
+      message: 'Login successful',
+      access_token: 'token',
+      user: {
+        id: '1',
+        username: 'test',
+        email: undefined,
+        role: undefined,
+        createdAt: undefined,
+      },
+    });
   });
 
   it('should register a user', async () => {
