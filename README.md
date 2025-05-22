@@ -97,7 +97,7 @@ Asegúrate de tener Docker y Docker Compose instalados en tu sistema.
 
 1. Clona el repositorio y navega a la carpeta raíz del proyecto.
 2. Crea un archivo `.env` con las variables necesarias (ver ejemplo más arriba).
-3. Ejecuta el siguiente comando para levantar todos los servicios (backend, base de datos y frontend si está configurado):
+3. Si tienes el backend y frontend en carpetas separadas, mueve este archivo `docker-compose.yml` a la raíz del proyecto que contenga ambas carpetas (por ejemplo, `/Users/user/repos/`).
 
 ```bash
 docker-compose up --build
