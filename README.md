@@ -79,13 +79,32 @@ npm install
 
 ---
 
-## Despliegue con Docker
+## Despliegue con Docker Compose
+
+Asegúrate de tener Docker y Docker Compose instalados en tu sistema.
+
+1. Clona el repositorio y navega a la carpeta raíz del proyecto.
+2. Crea un archivo `.env` con las variables necesarias (ver ejemplo más arriba).
+3. Ejecuta el siguiente comando para levantar todos los servicios (backend, base de datos y frontend si está configurado):
 
 ```bash
 docker-compose up --build
 ```
 
-Esto levantará la base de datos y el backend de NestJS.
+Esto levantará:
+
+- **Base de datos PostgreSQL** en el puerto 5432.
+- **Backend NestJS** en el puerto 3000.
+- **Frontend** (si está configurado) en el puerto 8080.
+
+Puedes acceder a la API en [http://localhost:3000/api](http://localhost:3000/api)  
+Y a la documentación Swagger en [http://localhost:3000/api/docs](http://localhost:3000/api/docs)
+
+Para detener los servicios, usa:
+
+```bash
+docker-compose down
+```
 
 ---
 
