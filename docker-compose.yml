@@ -1,7 +1,8 @@
-version: '3.8'
 services:
   frontend:
-    build: .
+    build:
+      context: ./front-cmpc-libros
+      dockerfile: Dockerfile
     container_name: front-cmpc-libros
     ports:
       - '8080:80'
@@ -16,7 +17,7 @@ services:
     image: cmpc-libros-backend # Cambia esto por el nombre real de tu imagen backend
     container_name: cmpc-libros-backend
     build:
-      context: ../cmpc-libros # Ajusta la ruta al backend si es necesario
+      context: ./cmpc-libros # Ajusta la ruta al backend si es necesario
     ports:
       - '3000:3000'
     environment:
