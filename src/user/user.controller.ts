@@ -39,7 +39,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Usuario encontrado' })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Actualizar usuario' })
@@ -53,7 +53,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Usuario eliminado' })
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 
   @ApiOperation({ summary: 'Login de usuario' })

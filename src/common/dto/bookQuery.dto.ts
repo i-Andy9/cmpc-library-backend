@@ -5,6 +5,9 @@ export class BookQueryDto {
   @IsOptional()
   @IsString()
   genre?: string;
+  @IsOptional()
+  @IsString()
+  title?: string;
 
   @IsOptional()
   @IsString()

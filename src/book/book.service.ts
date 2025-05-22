@@ -37,6 +37,7 @@ export class BookService {
     const { limit = 10, offset = 0 } = bookQueryDto;
     try {
       const where: any = {};
+      if (bookQueryDto?.title) where.title = bookQueryDto.title;
       if (bookQueryDto?.genre) where.genre = bookQueryDto.genre;
       if (bookQueryDto?.publisher) where.publisher = bookQueryDto.publisher;
       if (bookQueryDto?.author) where.author = bookQueryDto.author;
@@ -44,9 +45,6 @@ export class BookService {
         where.available = bookQueryDto.available;
 
       const books = await this.bookModel.findAll({ where, limit, offset });
-      if (!books || books.length === 0) {
-        throw new NotFoundException('No books found');
-      }
       const booksArray = books.map((book) => this.toBookResponse(book));
       return { books: booksArray };
     } catch (error) {
@@ -61,7 +59,6 @@ export class BookService {
       if (!book) {
         throw new NotFoundException(`Book with id ${id} not found`);
       }
-      console.log(book);
       return this.toBookResponse(book);
     } catch (error) {
       this.logger.error('Error fetching book:', error.message);

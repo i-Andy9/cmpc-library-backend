@@ -31,8 +31,8 @@ export class UserService {
   }
 
   private toSafeUser(user: User) {
-    const { password, ...rest } = user['dataValues'];
-    return rest;
+    const { id, username, email, role, createdAt } = user['dataValues'];
+    return { id, username, email, role, createdAt };
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -68,7 +68,7 @@ export class UserService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     try {
       const user = await this.userModel.findOne({
         where: { id, deletedAt: null },
@@ -116,8 +116,13 @@ export class UserService {
         this.logger.error('User not updated');
         throw new BadRequestException('User not updated');
       }
-      this.logger.log(`User updated successfully: ${user.username}`);
-      return this.toSafeUser(user);
+      const updatedUser = await this.userModel.findByPk(id);
+      if (!updatedUser) {
+        this.logger.error('User not found after update');
+        throw new NotFoundException('User not found after update');
+      }
+      this.logger.log(`User updated successfully: ${updatedUser.username}`);
+      return this.toSafeUser(updatedUser);
     } catch (error) {
       this.logger.error('Error updating user:', error.message);
       if (error instanceof NotFoundException) {
@@ -128,7 +133,7 @@ export class UserService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       const user = await this.userModel.findByPk(id);
       if (!user) throw new NotFoundException('User not found');
@@ -151,13 +156,17 @@ export class UserService {
         where: { username, deletedAt: null },
       });
       if (!user) throw new NotFoundException('User not found');
-      const isMatch = await this.hashPassword(password).then((hash) =>
-        bcrypt.compare(password, user.password),
-      );
+      console.log('first');
+      const isMatch = await bcrypt.compare(password, user.password);
+      console.log('second');
       if (!isMatch) throw new BadRequestException('Invalid credentials');
       // Generar y devolver JWT
+      console.log('first);');
       const payload = { username: user.username, sub: user.id };
-      const access_token = this.jwtService.sign(payload);
+      console.log('first');
+      const access_token = await this.jwtService.signAsync(payload);
+
+      console.log(access_token);
       this.logger.log(`User ${username} logged in successfully`);
       return {
         message: 'Login successful',
@@ -183,7 +192,7 @@ export class UserService {
 
   async logout() {
     try {
-      // Aquí podrías invalidar el token en el frontend o mantener una blacklist
+      //TODO: validate jwt token and logic to logout
       this.logger.log('User logged out successfully');
       return { message: 'Logout successful' };
     } catch (error) {
@@ -202,7 +211,7 @@ export class UserService {
       const resetTokenExpires = addMinutes(new Date(), 30); // Token válido por 30 minutos
       await user.update({ resetToken, resetTokenExpires });
       this.logger.log(`Password reset requested for user: ${user.username}`);
-      // Aquí deberías enviar el token por email
+      //todo: send email with resetToken
       return { message: 'Password reset token generated', resetToken };
     } catch (error) {
       this.logger.error('Error requesting password reset:', error.message);

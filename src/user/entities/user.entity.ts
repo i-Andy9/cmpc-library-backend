@@ -8,6 +8,7 @@ import {
   Unique,
   CreatedAt,
   UpdatedAt,
+  DeletedAt,
 } from 'sequelize-typescript';
 
 @Table({ tableName: 'users' })
@@ -33,6 +34,9 @@ export class User extends Model<User> {
   @Column({ type: DataType.DATE, allowNull: true })
   declare resetTokenExpires: Date | null;
 
+  @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'user' })
+  declare role: string;
+
   @CreatedAt
   @Column({ type: DataType.DATE })
   declare createdAt: Date;
@@ -41,6 +45,7 @@ export class User extends Model<User> {
   @Column({ type: DataType.DATE })
   declare updatedAt: Date;
 
-  @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'user' })
-  declare role: string;
+  @DeletedAt
+  @Column({ type: DataType.DATE })
+  declare deletedAt: Date | null;
 }
